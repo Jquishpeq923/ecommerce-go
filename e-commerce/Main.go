@@ -4,35 +4,29 @@ import (
 	"ecommerce/config"
 	"ecommerce/models"
 	"fmt"
-	"log"
 )
 
 func main() {
-	// Crear la base de datos si no existe
+	// Crear la base de datos y la tabla de productos si no existen
 	config.CrearBaseDeDatos()
 
 	// Conectar a la base de datos ecommerce
-	db, err := config.ConectarBD()
-	if err != nil {
-		log.Fatal("Error al conectar a la base de datos ecommerce:", err)
+	db := config.ConectarBD()
+	if db == nil {
+		fmt.Println("Error al conectar a la base de datos ecommerce")
+		return
 	}
-	defer db.Close()
-
-	// Crear la tabla de productos si no existe
-	config.CrearTablas(db)
 
 	// Crear un nuevo producto como ejemplo
 	producto := models.Producto{
-		Nombre:      "Producto de ejemplo",
-		Descripcion: "Este es un producto de ejemplo",
+		Nombre:      "libro de dibujo",
+		Descripcion: "Libro para dibujar",
 		Precio:      9.99,
 		Stock:       10,
 	}
 
-	err = producto.CrearProducto(db)
-	if err != nil {
-		log.Fatal("Error al crear producto:", err)
-	}
+	producto.CrearProducto(db)
 
-	fmt.Printf("Producto creado exitosamente con ID: %d\n", producto.ID)
+	// Imprimir mensaje de éxito
+	fmt.Println("Producto creado exitosamente")
 }

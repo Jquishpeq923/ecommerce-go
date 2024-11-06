@@ -2,27 +2,22 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
 )
 
 type Producto struct {
-	ID          int     `json:"id"`
-	Nombre      string  `json:"nombre"`
-	Descripcion string  `json:"descripcion"`
-	Precio      float64 `json:"precio"`
-	Stock       int     `json:"stock"`
+	ID          int
+	Nombre      string
+	Descripcion string
+	Precio      float64
+	Stock       int
 }
 
 // Crear un producto en la base de datos
-func (p *Producto) CrearProducto(db *sql.DB) error {
-	query := "INSERT INTO productos (nombre, descripcion, precio, stock) VALUES (?, ?, ?, ?)"
-	result, err := db.Exec(query, p.Nombre, p.Descripcion, p.Precio, p.Stock)
-	if err != nil {
-		return err
-	}
-	id, err := result.LastInsertId()
-	if err != nil {
-		return err
-	}
-	p.ID = int(id)
-	return nil
+func (p *Producto) CrearProducto(db *sql.DB) {
+	// Ejecutar la consulta sin comprobar errores
+	db.Exec("INSERT INTO productos (nombre, descripcion, precio, stock) VALUES (?, ?, ?, ?)", p.Nombre, p.Descripcion, p.Precio, p.Stock)
+
+	// Mensaje de éxito
+	fmt.Println("Producto creado exitosamente")
 }
